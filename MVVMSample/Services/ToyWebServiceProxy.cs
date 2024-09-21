@@ -208,16 +208,33 @@ namespace MVVMSample.Services
 
         }
 
-        public async Task<bool> UploadToyImage(FileResult file)
+        public async Task<bool> UploadToyImage(FileResult photo,Toy toy)
         {
+            //another option: convert to string base64 and then json...
 
-            //convert file to byte stream
-           
-            
-            //create multipartFormDataContent
-            
-            //post image
-            return true;
+            byte[] streamBytes;
+            //take the photo and make it a byte array
+            using (var stream = await photo.OpenReadAsync())
+            //copy to the byte array
+            using (var memoryStream = new MemoryStream())
+            {
+                await stream.CopyToAsync(memoryStream);
+                streamBytes = memoryStream.ToArray();
+            }
+
+            using (var content = new MultipartFormDataContent())
+            {
+                var fileContent = new ByteArrayContent(streamBytes);
+                fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
+                //"file" --זהה לשם הפרמטר של הפעולה בשרת שמייצגת את הקובץ
+                content.Add(fileContent, "file", photo.FileName);
+                var response = await client.PostAsync(@$"{URL}Toy/{toy.Id}", content);
+                if (response.IsSuccessStatusCode)
+                {
+                   return  true;
+                }
+            }
+            return false;
         }
 
     }
