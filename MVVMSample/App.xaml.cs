@@ -15,6 +15,7 @@ namespace MVVMSample
             //שינוי הצבעה ל 
             //SHELL
             MainPage = new AppShell();
+            //Add Support for Loading page and modal login
         }
     }
 }

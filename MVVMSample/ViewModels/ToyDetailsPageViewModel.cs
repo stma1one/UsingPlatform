@@ -21,7 +21,9 @@ namespace MVVMSample.ViewModels
         private int id;
         private Toy? selectedToy;
 
-
+        /*add support for changing photo
+         *add Property that updates and reads the SelectedToy.Image
+         */
         public int Id
         {
             get
@@ -42,6 +44,10 @@ namespace MVVMSample.ViewModels
 
             }
         }
+        /*
+         * add Command for Uploading Image
+         * 
+         */
 
         private async void FetchToyById()
         {
@@ -69,9 +75,10 @@ namespace MVVMSample.ViewModels
         public ToyDetailsPageViewModel(IToys service)
         {
             toyService = service ;
-            
+         //Add Command for uploading image   
 
         }
+        //Add Method Upload Image
 
 
     }
