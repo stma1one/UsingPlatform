@@ -208,19 +208,9 @@ namespace MVVMSample.Services
 
         }
 
-        public async Task<bool> UploadToyImage(FileResult file)
-        {
+       
 
-            //convert file to byte stream
-           
-            
-            //create multipartFormDataContent
-            
-            //post image
-            return true;
-        }
-
-        public Task<bool> UploadToyImage(FileResult photo, Toy toy)
+        public async Task<bool> UploadToyImage(FileResult photo, Toy toy)
         {
             throw new NotImplementedException();
         }
