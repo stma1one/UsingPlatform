@@ -20,6 +20,7 @@ public interface IToys
     public  Task<bool> DeleteToy(Toy toy);//מחיקת צעצוע
 
     public  Task<User> Login(string username, string password);  //חיבור
+    public Task<bool> UploadToyImage(FileResult photo, Toy toy);
 
 
 

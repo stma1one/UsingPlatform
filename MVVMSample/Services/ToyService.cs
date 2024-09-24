@@ -175,5 +175,10 @@ namespace MVVMSample.Services;
 
         return new User() { Name = username, Password = password };
     }
+
+    public Task<bool> UploadToyImage(FileResult photo, Toy toy)
+    {
+        throw new NotImplementedException();
+    }
 }
 

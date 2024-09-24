@@ -85,27 +85,61 @@ namespace MVVMSample.ViewModels
         public ToyDetailsPageViewModel(IToys service)
         {
             toyService = service ;
-            ChangePhotoCommand = new Command(async () => 
-            {
-                SelectedImage = "loadingforever.gif";
-                string choice=await Shell.Current.DisplayActionSheet(" בחר מקור", "ביטול", "בטל", "צלם","בחר קובץ");
-                switch (choice)
-                {
-                    case "צלם":
-                        break;
-                    case "בחר קובץ":
-                        break;
-                    default:
-                        break;
-                }
+            ChangePhotoCommand = new Command(async () => await ChangeImage()
 
-            }
             );
             
 
         }
-      
+        public async Task ChangeImage()
+        {
+            FileResult photo = null;
+            var backup = SelectedImage;
+            SelectedImage = "loadingforever.gif";
+            string choice = await Shell.Current.DisplayActionSheet(" בחר מקור", "ביטול", "בטל", "צלם", "בחר קובץ");
+            try
+            {
+                switch (choice)
+                {
+                    case "צלם":
+                        MediaPickerOptions options = new MediaPickerOptions() { Title = "צלם" };
+                        photo = await MediaPicker.Default.CapturePhotoAsync(options);
+                        break;
+                    case "בחר קובץ":
+                        options = new MediaPickerOptions() { Title = "בחר קובץ" };
+                        photo = await MediaPicker.Default.PickPhotoAsync(options);
+                        break;
+                    default:
+                        break;
+                }
+                if (photo != null)
+                {
+                    bool success = await toyService.UploadToyImage(photo, SelectedToy);
+                    if (success)
+                    {
+                        // save the file into local storage
+                        string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+
+                        using Stream sourceStream = await photo.OpenReadAsync();
+                        using FileStream localFileStream = File.OpenWrite(localFilePath);
+
+                        await sourceStream.CopyToAsync(localFileStream);
+                        SelectedImage = localFilePath;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            await Shell.Current.DisplayAlert("משהו השתבש", "לא הצלחתי להעלות תמונה", "אישור");
+            SelectedImage = backup;
+            return;
 
 
-    }
+
+        }
+
+
+   }   
 }
