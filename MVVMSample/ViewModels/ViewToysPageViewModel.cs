@@ -1,4 +1,5 @@
-﻿using MVVMSample.Models;
+﻿using MVVMSample.Helpers;
+using MVVMSample.Models;
 using MVVMSample.Services;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MVVMSample.ViewModels
 {
-   public class ViewToysPageViewModel:ViewModelBase
+    public class ViewToysPageViewModel : ViewModelBase
     {
         #region Fields
         private double? price;
@@ -19,8 +20,8 @@ namespace MVVMSample.ViewModels
         private IToys toyService;
         private List<Toy> fullList;
         private bool isRefreshing;
-        
-      
+
+
 
 
         #region נבחר מהרשימה
@@ -44,11 +45,11 @@ namespace MVVMSample.ViewModels
         #endregion
 
         #region בחירת אוסף פריטים מהרישמה
-       public ObservableCollection<object> SelectedToys
+        public ObservableCollection<object> SelectedToys
         {
             get; set;
         }
-        
+
         #endregion
 
 
@@ -99,7 +100,24 @@ namespace MVVMSample.ViewModels
                 }
             }
         }
+        public async Task LoadToys()
+        {
+            try
+            {
+                fullList = await toyService?.GetToys();
+                if (fullList != null)
+                {
+                    Toys = new ObservableCollection<Toy>(fullList);
+                    Price = null;
+                }
+            }
+            catch (Exception ex) 
+            {
+                HandleError(ex);
+            }
 
+		}
+        
         #endregion
 
         #region COMMANDS
@@ -141,8 +159,9 @@ namespace MVVMSample.ViewModels
             #region Init Data
             Price = null;
             toyService=service;
-         //   toys=new ObservableCollection<Toy>(toyService.GetToys());
-           
+            //   toys=new ObservableCollection<Toy>(toyService.GetToys());
+            
+          //  Refresh().Awaiter(failedCallback:HandleError);
            
            
             #endregion
@@ -150,7 +169,7 @@ namespace MVVMSample.ViewModels
             #region Init Commands
             FilterAbovePriceCommand = new Command(execute:FilterAbove,()=>Toys!=null&&Toys.Count>0);
             FilterBelowPriceCommand = new Command(FilterBelow,()=>Price>0);
-            RefreshCommand = new Command(Refresh);
+            RefreshCommand = new Command(async () => await Refresh());
             DeleteCommand = new Command<Toy>(async(t) => {if(await toyService.DeleteToy(t))Refresh(); });
 
             #region Navigation Commands
@@ -176,11 +195,16 @@ namespace MVVMSample.ViewModels
 
         }
 
+		private async void HandleError(Exception exception)
+		{
+           await Shell.Current.DisplayAlert("תקלה", "באסה", "אישור");
+		}
 
-        #endregion
 
-        #region Methods
-        private async void Refresh()
+		#endregion
+
+		#region Methods
+		private async Task Refresh()
         {
             IsRefreshing = true;
             fullList = await toyService.GetToys();
