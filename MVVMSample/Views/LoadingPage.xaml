@@ -9,7 +9,7 @@
 
     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
 
-        <ActivityIndicator Color="Azure"
+        <ActivityIndicator Color="Blue"
                            IsRunning="True"
                            HeightRequest="100"
                            WidthRequest="100" />

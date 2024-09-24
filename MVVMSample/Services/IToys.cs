@@ -21,6 +21,7 @@ public interface IToys
 
     public  Task<User> Login(string username, string password);  //חיבור
 
+    public Task<bool> UploadToyImage(FileResult photo, Toy toy);//העלאת תמונה
 
 
 }

@@ -25,22 +25,7 @@ namespace MVVMSample
         }
 
 
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-            await Task.Delay(3000);
-            if (user == null)
-            {
-                
-               
-                var page=(Application.Current as App)?.ServiceProvider?.GetService<LoginPage>();
-              
-                await Shell.Current.Navigation.PushModalAsync(page);
-               
-               
-                
-            }
-        }
+      
 
 
     }

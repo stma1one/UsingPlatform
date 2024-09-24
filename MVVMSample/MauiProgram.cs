@@ -38,7 +38,7 @@ namespace MVVMSample
             builder.Services.AddTransient<LoadingPage>();
             builder.Services.AddSingleton<AddToyPage>();
             builder.Services.AddSingleton<LoginPage>();
-            builder.Services.AddSingleton<ToyDetailsPage>();
+            builder.Services.AddTransient<ToyDetailsPage>();
             builder.Services.AddSingleton<ViewToysPage>();
             return builder;
         }
@@ -46,7 +46,7 @@ namespace MVVMSample
         {
             builder.Services.AddTransient<AddToysPageViewModel>();
             builder.Services.AddSingleton<LoginPageViewModel>();
-            builder.Services.AddSingleton<ToyDetailsPageViewModel>();
+            builder.Services.AddTransient<ToyDetailsPageViewModel>();
             builder.Services.AddSingleton<ViewToysPageViewModel>();
             return builder;           
         }
