@@ -7,10 +7,14 @@
              Title="ToyDetailsPage">
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="20">
-            <Image Source="{Binding SelectedToy.Image}"
-                   HeightRequest="200"
+            <Image  IsAnimationPlaying="true"  Source="{Binding SelectedImage}"
+                   HeightRequest="200" WidthRequest="200"
                    Aspect="AspectFit"
-                   HorizontalOptions="Center" />
+                   HorizontalOptions="Center" >
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ChangePhotoCommand}"></TapGestureRecognizer>
+                </Image.GestureRecognizers>
+            </Image>
 
             <Frame BorderColor="LightGray" CornerRadius="10" Padding="15">
                 <VerticalStackLayout Spacing="10">
@@ -45,6 +49,8 @@
 
                     <Label Text="{Binding Id}" FontSize="16"/>
                 </VerticalStackLayout>
+
+                
             </Frame>
         </VerticalStackLayout>
     </ScrollView>

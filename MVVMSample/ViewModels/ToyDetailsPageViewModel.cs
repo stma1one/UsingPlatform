@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MVVMSample.ViewModels
 {
@@ -21,7 +22,22 @@ namespace MVVMSample.ViewModels
         private int id;
         private Toy? selectedToy;
 
+        public ICommand ChangePhotoCommand
+        {
+            get; protected set;
+            
+            
+        }
 
+
+        public string SelectedImage
+        {
+            get => SelectedToy?.Image; set
+            {
+                if (value != SelectedToy?.Image) { SelectedToy.Image = value; OnPropertyChanged(); }
+            }
+
+        }
         public int Id
         {
             get
@@ -57,7 +73,7 @@ namespace MVVMSample.ViewModels
                 {
                     selectedToy = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(SecondHandStatus));
+                    OnPropertyChanged(nameof(SecondHandStatus)); OnPropertyChanged(nameof(SelectedImage));
                 }
             }
         }
@@ -69,9 +85,26 @@ namespace MVVMSample.ViewModels
         public ToyDetailsPageViewModel(IToys service)
         {
             toyService = service ;
+            ChangePhotoCommand = new Command(async () => 
+            {
+                SelectedImage = "loadingforever.gif";
+                string choice=await Shell.Current.DisplayActionSheet(" בחר מקור", "ביטול", "בטל", "צלם","בחר קובץ");
+                switch (choice)
+                {
+                    case "צלם":
+                        break;
+                    case "בחר קובץ":
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            );
             
 
         }
+      
 
 
     }

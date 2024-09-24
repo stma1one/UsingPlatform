@@ -62,8 +62,8 @@ namespace MVVMSample.ViewModels
                 await Shell.Current.DisplayAlert("Login", $"Login Succeed! for {user.Name}", "ok");
                  AppShell.user=user;
 
-                Shell.Current.Items.RemoveAt(0);    
-                await Shell.Current.GoToAsync("///MainPage");
+                Shell.Current.FlyoutBehavior = FlyoutBehavior.Flyout; 
+                await Shell.Current.GoToAsync("//MainPage");
                 
                
 

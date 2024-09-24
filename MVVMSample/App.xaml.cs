@@ -15,6 +15,9 @@ namespace MVVMSample
             //שינוי הצבעה ל 
             //SHELL
             MainPage = new AppShell();
+            Shell.Current.GoToAsync("//LoadingPage");
+            var page = (Application.Current as App)?.ServiceProvider?.GetService<LoginPage>();
+            Shell.Current.Navigation.PushModalAsync(page);
         }
     }
 }
