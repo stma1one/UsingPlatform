@@ -1,10 +1,12 @@
-﻿using MVVMSample.Views;
+﻿using MVVMSample.Models;
+using MVVMSample.Views;
 
 namespace MVVMSample
 {
     public partial class App : Application
     {
-       public IServiceProvider ServiceProvider
+		public static User? user;
+		public IServiceProvider ServiceProvider
         {
             get; protected set;
         }

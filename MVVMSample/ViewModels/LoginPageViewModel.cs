@@ -60,9 +60,13 @@ namespace MVVMSample.ViewModels
             {
                 //await Application.Current.MainPage.DisplayAlert("Login", $"Login Succeed! for {user.Name}", "ok");
                 await Shell.Current.DisplayAlert("Login", $"Login Succeed! for {user.Name}", "ok");
-                 AppShell.user=user;
+                 
+                //Update user
+                App.user=user;
 
+                //Return Shell
                 Shell.Current.FlyoutBehavior = FlyoutBehavior.Flyout; 
+                //Clear Navigation Stack
                 await Shell.Current.GoToAsync("//MainPage");
                 
                

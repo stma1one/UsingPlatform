@@ -125,16 +125,17 @@ namespace MVVMSample.ViewModels
 
                         await sourceStream.CopyToAsync(localFileStream);
                         SelectedImage = localFilePath;
+                        return;
                     }
                 }
             }
             catch (Exception ex)
             {
-
+                await Shell.Current.DisplayAlert("משהו השתבש", "לא הצלחתי להעלות תמונה", "אישור");
+              SelectedImage = backup;
+              return;
             }
-            await Shell.Current.DisplayAlert("משהו השתבש", "לא הצלחתי להעלות תמונה", "אישור");
-            SelectedImage = backup;
-            return;
+           
 
 
 

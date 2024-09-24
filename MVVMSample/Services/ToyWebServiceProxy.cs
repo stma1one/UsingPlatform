@@ -227,8 +227,8 @@ namespace MVVMSample.Services
                 var fileContent = new ByteArrayContent(streamBytes);
                 fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
                 //"file" --זהה לשם הפרמטר של הפעולה בשרת שמייצגת את הקובץ
-                content.Add(fileContent, "file", photo.FileName);
-                var response = await client.PostAsync(@$"{URL}Toy/{toy.Id}", content);
+                content.Add(fileContent, "photo", photo.FileName);
+                var response = await client.PutAsync(@$"{URL}Toys/Image/{toy.Id}", content);
                 if (response.IsSuccessStatusCode)
                 {
                    return  true;

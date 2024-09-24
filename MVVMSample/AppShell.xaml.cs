@@ -7,7 +7,7 @@ namespace MVVMSample
     public partial class AppShell : Shell
     {
 
-        public static User? user; 
+        
       public ICommand LogoutCommand=> new Command(async () => await this.DisplayAlert("טרם פותח", "טרם פותח", "ביטול"));
         //{
         //    get; private set;   
