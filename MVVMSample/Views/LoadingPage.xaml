@@ -4,7 +4,6 @@
              x:Class="MVVMSample.Views.LoadingPage"
              Title="חכו שניה... תיכף מגיעים"
              Shell.PresentationMode="ModalAnimated"
-             
              Shell.NavBarIsVisible="False">
 
     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">

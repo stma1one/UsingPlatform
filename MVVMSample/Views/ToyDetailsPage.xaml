@@ -7,46 +7,49 @@
              Title="ToyDetailsPage">
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="20">
-            <!-- Add Support for gif : IsAnimationPlaying="true"-->
-            <!--Change Source to SelectedImage-->
-            <!-- Add Gestures (GestureRecognizers)-->
-            <Image Source="{Binding SelectedToy.Image}"
+            <!--  Add Support for gif : IsAnimationPlaying="true"  -->
+            <!--  Change Source to SelectedImage  -->
+            <!--  Add Gestures (GestureRecognizers)  -->
+            <Image IsAnimationPlaying="True"
+                   Source="{Binding SelectedImage}"
                    HeightRequest="200"
                    Aspect="AspectFit"
-                   HorizontalOptions="Center" />
+                   HorizontalOptions="Center">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ChangePhotoCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
 
-            <Frame BorderColor="LightGray" CornerRadius="10" Padding="15">
+            <Frame BorderColor="LightGray"
+                   CornerRadius="10"
+                   Padding="15">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="{Binding SelectedToy.Name, FallbackValue='לא נקבע שם'}" 
-                           FontSize="24" 
-                           FontAttributes="Bold" 
+                    <Label Text="{Binding SelectedToy.Name, FallbackValue='לא נקבע שם'}"
+                           FontSize="24"
+                           FontAttributes="Bold"
                            HorizontalOptions="Center" />
 
-                    <Label 
-                           FontSize="18" 
-                           TextColor="Green" >
+                    <Label FontSize="18" TextColor="Green">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="מחיר: "/>
-                                <Span Text="{Binding SelectedToy.Price, FallbackValue='אין מחיר'}"/>
+                                <Span Text="מחיר: " />
+                                <Span Text="{Binding SelectedToy.Price, FallbackValue='אין מחיר'}" />
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
 
-                    <Label
-                           FontSize="16" >
+                    <Label FontSize="16">
                         <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="סוג: "/>
-                            <Span Text="{Binding SelectedToy.Type.Name, FallbackValue='סוג צעצוע'}"/>
-                        </FormattedString>
+                            <FormattedString>
+                                <Span Text="סוג: " />
+                                <Span Text="{Binding SelectedToy.Type.Name, FallbackValue='סוג צעצוע'}" />
+                            </FormattedString>
                         </Label.FormattedText>
                     </Label>
 
-                    <Label Text="{Binding SecondHandStatus}" 
-                           FontSize="16" />
+                    <Label Text="{Binding SecondHandStatus}" FontSize="16" />
 
-                    <Label Text="{Binding Id}" FontSize="16"/>
+                    <Label Text="{Binding Id}" FontSize="16" />
                 </VerticalStackLayout>
             </Frame>
         </VerticalStackLayout>

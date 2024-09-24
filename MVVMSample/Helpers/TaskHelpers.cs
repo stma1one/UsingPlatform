@@ -16,6 +16,19 @@ namespace MVVMSample.Helpers
         /// <param name="task">המשימה שיש להפעיל</param>
         /// <param name="completedCallback">הפעולה שיש להפעיל במקרה של הצלחה</param>
         /// <param name="failedCallBack">פעולה שיש להפעיל במקרה של כשלון</param>
+        /// 
+        public static async void Awaiter(this Task task, Action? completedCallback = null, Action<Exception>? failedCallBack = null)
+        {
+            try
+            {
+                await task;
+                completedCallback?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                failedCallBack?.Invoke(ex);
+            }
+        }
         #endregion
     }
 }

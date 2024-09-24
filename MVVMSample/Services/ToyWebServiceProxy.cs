@@ -127,6 +127,7 @@ namespace MVVMSample.Services
                 string json=string.Empty;//הג'ייסון שיקלט
                 List<Toy>? toys;//האוסף שיוחזר
 
+               
                 //פניה לשרת
                 var response = await client.GetAsync(@$"{URL}Toys/0");
                 //אם הכל תקין
@@ -147,7 +148,7 @@ namespace MVVMSample.Services
  
                 
             }
-            catch (Exception ex) { return new List<Toy>(); }
+            catch (Exception ex) { throw new Exception(ex.Message); }
 
         }
         public async Task<bool> AddToy(Toy toy)

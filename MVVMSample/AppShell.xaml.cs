@@ -7,8 +7,16 @@ namespace MVVMSample
     public partial class AppShell : Shell
     {
 
-        public static User? user; 
-      public ICommand LogoutCommand=> new Command(async () => await this.DisplayAlert("טרם פותח", "טרם פותח", "ביטול"));
+        public static User? user;
+        public ICommand LogoutCommand => 
+            new Command(async ()=> {
+                App.user = null;
+                if (Preferences.Default.ContainsKey("userObj"))
+                    Preferences.Default.Remove("userObj");
+                await Shell.Current.GoToAsync("Login");
+                Shell.Current.FlyoutIsPresented = false;
+
+		});
         //{
         //    get; private set;   
         //}
@@ -24,9 +32,9 @@ namespace MVVMSample
             #endregion
         }
 
+		
 
-      
 
 
-    }
+	}
 }

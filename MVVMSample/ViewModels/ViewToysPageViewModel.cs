@@ -1,4 +1,5 @@
-﻿using MVVMSample.Models;
+﻿using MVVMSample.Helpers;
+using MVVMSample.Models;
 using MVVMSample.Services;
 using System;
 using System.Collections.Generic;
@@ -120,7 +121,19 @@ namespace MVVMSample.ViewModels
         {
             get;private set;
         }
+        public async Task LoadData()
+        {
+            
+                fullList = await toyService.GetToys();
 
+            if (fullList.Count <= 0)
+                await Shell.Current.GoToAsync("Login");
+
+                Toys = new ObservableCollection<Toy>(fullList);
+                Price = null;
+                RefreshCommands();
+            
+		}
         #region Navigation
         public ICommand ShowDetailsCommand
         {
@@ -141,6 +154,7 @@ namespace MVVMSample.ViewModels
             #region Init Data
             Price = null;
             toyService=service;
+            LoadData().Awaiter(failedCallBack:HandleError);
          //   toys=new ObservableCollection<Toy>(toyService.GetToys());
            
            
@@ -150,7 +164,7 @@ namespace MVVMSample.ViewModels
             #region Init Commands
             FilterAbovePriceCommand = new Command(execute:FilterAbove,()=>Toys!=null&&Toys.Count>0);
             FilterBelowPriceCommand = new Command(FilterBelow,()=>Price>0);
-            RefreshCommand = new Command(Refresh);
+            RefreshCommand = new Command(async()=>await Refresh());
             DeleteCommand = new Command<Toy>(async(t) => {if(await toyService.DeleteToy(t))Refresh(); });
 
             #region Navigation Commands
@@ -176,18 +190,29 @@ namespace MVVMSample.ViewModels
 
         }
 
+		private void HandleError(Exception ex)
+		{
+            Shell.Current.DisplayAlert($"oopsi", $"doopsie:{ex.Message}", "OK");
+		}
 
-        #endregion
 
-        #region Methods
-        private async void Refresh()
+
+
+		#endregion
+
+		#region Methods
+		private async Task Refresh()
         {
             IsRefreshing = true;
             fullList = await toyService.GetToys();
-            Toys = new ObservableCollection<Toy>(fullList);
-            Price = null;
-            RefreshCommands();
-            IsRefreshing = false;
+           
+           
+                Toys = new ObservableCollection<Toy>(fullList);
+                Price = null;
+                RefreshCommands();
+           
+                IsRefreshing = false;
+            
         }
         private void FilterAbove()
         {

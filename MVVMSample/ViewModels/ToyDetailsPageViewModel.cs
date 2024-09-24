@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MVVMSample.ViewModels
 {
@@ -12,10 +13,10 @@ namespace MVVMSample.ViewModels
     //פרמטר ראשון - השם של התכונה במסך החדש
     //פרמטר שני- שם של המפתח במילון או השם של הפרמטר במחרוזת 
 
-    [QueryProperty(nameof(SelectedToy),"Toy")]
-    [QueryProperty(nameof(Id),"id")]
+    [QueryProperty(nameof(SelectedToy), "Toy")]
+    [QueryProperty(nameof(Id), "id")]
     #endregion
-   public class ToyDetailsPageViewModel : ViewModelBase
+    public class ToyDetailsPageViewModel : ViewModelBase
     {
         private IToys toyService;
         private int id;
@@ -23,7 +24,13 @@ namespace MVVMSample.ViewModels
 
         /*add support for changing photo
          *add Property that updates and reads the SelectedToy.Image
+         *
+         *
          */
+        public ICommand ChangePhotoCommand { get; private set;
+        }
+
+        public string SelectedImage { get => SelectedToy?.Image; set { if (value != SelectedToy?.Image) { SelectedToy.Image = value; OnPropertyChanged(); } } }
         public int Id
         {
             get
@@ -40,7 +47,7 @@ namespace MVVMSample.ViewModels
                     //Fetch the Toy by Id
                     FetchToyById();
                 }
-               
+
 
             }
         }
@@ -64,22 +71,52 @@ namespace MVVMSample.ViewModels
                     selectedToy = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(SecondHandStatus));
+                    OnPropertyChanged(nameof(SelectedImage));
                 }
             }
         }
 
-        
+
 
         public string SecondHandStatus => SelectedToy?.IsSecondHand == true ? "Condition: Second Hand" : "Condition: New";
 
         public ToyDetailsPageViewModel(IToys service)
         {
-            toyService = service ;
-         //Add Command for uploading image   
-
+            toyService = service;
+            //Add Command for uploading image   
+            ChangePhotoCommand = new Command(async () => await ChangeImage());
         }
-        //Add Method Upload Image
+
+        private async Task ChangeImage()
+        {
+            var backup = SelectedImage;
+            SelectedImage = "loadingforever.gif";
+            string choice = await Shell.Current.DisplayActionSheet(" בחר מקור", "ביטול", "בטל", "צלם", "בחר קובץ");
+            FileResult photo;
+            try
+            {
+
+                switch (choice)
+                {
+                    case "צלם":
+                        if (MediaPicker.Default.IsCaptureSupported)
+                        {
+                            photo = await MediaPicker.Default.CapturePhotoAsync();
+                        }
+
+                        break;
+                    case "בחר קובץ":
+                        break;
+                    default:
+                        SelectedImage = backup;
+
+						break;
+                }
+                //Add Method Upload Image
 
 
+            }
+            catch (Exception ex) { }
+            }
     }
 }

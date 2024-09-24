@@ -15,18 +15,21 @@
     </Shell.FlyoutHeader>
 
 
-    <!--מסך טעינה-->
-    <!-- FlyoutItemIsVisible="False" התפריט  לא מוצג-->
+    <!--  מסך טעינה  -->
+    <!--  FlyoutItemIsVisible="False" התפריט  לא מוצג  -->
 
+    <ShellContent FlyoutItemIsVisible="False"
+                  ContentTemplate="{DataTemplate local:LoadingPage}"
+                  Route="LoadingPage" />
 
 
     <!--  תפריט צף  -->
-    
-      
+
+
     <FlyoutItem Title="צעצוע">
         <!--  תפריט צף עם TAB  -->
         <Tab Icon="toy.png">
-            <ShellContent  Icon="toy.png"
+            <ShellContent Icon="toy.png"
                           Title=" חדש צעצוע"
                           ContentTemplate="{DataTemplate local:AddToyPage}"
                           Route="MainPage" />

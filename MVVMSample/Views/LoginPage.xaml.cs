@@ -1,5 +1,3 @@
-
-
 using MVVMSample.ViewModels;
 
 namespace MVVMSample.Views;
@@ -10,6 +8,5 @@ public partial class LoginPage : ContentPage
 	{
 		this.BindingContext = vm;
 		InitializeComponent();
-		
 	}
 }

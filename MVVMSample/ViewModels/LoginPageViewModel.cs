@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Text.Json;
 
 namespace MVVMSample.ViewModels
 {
@@ -34,11 +35,20 @@ namespace MVVMSample.ViewModels
             InServerCall = false;
             
             this.LoginCommand = new Command(OnLogin);
+            GoToWorkCommand = new Command(async () => await NavigateToWork());
             
             
         }
 
-        private async void OnLogin()
+		private async Task NavigateToWork()
+		{
+			bool supportsUri = await Launcher.Default.CanOpenAsync("waze://");
+
+			if (supportsUri)
+				await Launcher.Default.OpenAsync("waze://?favorite=work&navigate=yes");
+		}
+
+		private async void OnLogin()
         {
             //Choose the way you want to blobk the page while indicating a server call
             InServerCall = true;
@@ -60,10 +70,14 @@ namespace MVVMSample.ViewModels
             {
                 //await Application.Current.MainPage.DisplayAlert("Login", $"Login Succeed! for {user.Name}", "ok");
                 await Shell.Current.DisplayAlert("Login", $"Login Succeed! for {user.Name}", "ok");
-                 AppShell.user=user;
-
-                Shell.Current.Items.RemoveAt(0);    
-                await Shell.Current.GoToAsync("///MainPage");
+                App.user = user;
+                Preferences.Default.Set<string>("userObj",JsonSerializer.Serialize(user));
+                if (Shell.Current.Navigation.NavigationStack.Count > 1)
+                {
+                    await Shell.Current.GoToAsync("../");
+                }
+                else
+                    await Shell.Current.GoToAsync("//MainPage");
                 
                
 
