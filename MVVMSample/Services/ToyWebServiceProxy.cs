@@ -220,5 +220,9 @@ namespace MVVMSample.Services
             return true;
         }
 
+        public Task<bool> UploadToyImage(FileResult photo, Toy toy)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

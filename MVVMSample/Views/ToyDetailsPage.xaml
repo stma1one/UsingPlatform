@@ -7,6 +7,9 @@
              Title="ToyDetailsPage">
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="20">
+            <!-- Add Support for gif : IsAnimationPlaying="true"-->
+            <!--Change Source to SelectedImage-->
+            <!-- Add Gestures (GestureRecognizers)-->
             <Image Source="{Binding SelectedToy.Image}"
                    HeightRequest="200"
                    Aspect="AspectFit"
