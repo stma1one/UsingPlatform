@@ -1,4 +1,4 @@
-﻿using MVVMSample.Models;
+using MVVMSample.Models;
 using MVVMSample.Services;
 using System;
 using System.Collections.Generic;
@@ -27,10 +27,10 @@ namespace MVVMSample.ViewModels
          *
          *
          */
+        public string SelectedImage { get => SelectedToy?.Image; set { if (value != SelectedToy?.Image) { SelectedToy.Image = value; OnPropertyChanged(); } } }
         public ICommand ChangePhotoCommand { get; private set;
         }
 
-        public string SelectedImage { get => SelectedToy?.Image; set { if (value != SelectedToy?.Image) { SelectedToy.Image = value; OnPropertyChanged(); } } }
         public int Id
         {
             get
@@ -91,21 +91,25 @@ namespace MVVMSample.ViewModels
         {
             var backup = SelectedImage;
             SelectedImage = "loadingforever.gif";
-            string choice = await Shell.Current.DisplayActionSheet(" בחר מקור", "ביטול", "בטל", "צלם", "בחר קובץ");
-            FileResult photo;
+            string choice = await Shell.Current.DisplayActionSheet("בחרו פעולה", cancel: "ביטול", null, "צלם", "בחר תמונה");
+                
+            FileResult photo=null;
+
             try
             {
-
+                MediaPickerOptions options = new MediaPickerOptions() { Title = "חייך יפה למצלמה" };
                 switch (choice)
                 {
                     case "צלם":
                         if (MediaPicker.Default.IsCaptureSupported)
                         {
-                            photo = await MediaPicker.Default.CapturePhotoAsync();
+
+                            photo = await MediaPicker.Default.CapturePhotoAsync(options);
                         }
 
                         break;
-                    case "בחר קובץ":
+                    case "בחר תמונה":
+                        photo=await MediaPicker.Default.PickPhotoAsync(options);
                         break;
                     default:
                         SelectedImage = backup;
@@ -113,9 +117,26 @@ namespace MVVMSample.ViewModels
 						break;
                 }
                 //Add Method Upload Image
+                if (photo != null)
+                {
+                    bool success = await toyService.UploadToyImage(photo, SelectedToy);
+                    if (success)
+                    {
+						// save the file into local storage
+						string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+
+						using Stream sourceStream = await photo.OpenReadAsync();
+						using FileStream localFileStream = File.OpenWrite(localFilePath);
+
+						await sourceStream.CopyToAsync(localFileStream);
+                        SelectedImage = localFilePath;
+					}
+                   else SelectedImage = backup;
+                }
 
 
-            }
+
+			}
             catch (Exception ex) { }
             }
     }
