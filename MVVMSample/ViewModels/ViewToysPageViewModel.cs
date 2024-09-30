@@ -20,6 +20,7 @@ namespace MVVMSample.ViewModels
         private IToys toyService;
         private List<Toy> fullList;
         private bool isRefreshing;
+	private bool hasInternet;//אם יש אינטרנט במכשיר או אין
         
       
 
@@ -151,6 +152,8 @@ namespace MVVMSample.ViewModels
         #region Constructor
         public ViewToysPageViewModel(IToys service)
         {
+	//Notify when device goes off internet or back on
+	    Connectivity.ConnectivityChanged +=(async(s,e)=>await NotifyWhenInternetIsLost(s,e));
             #region Init Data
             Price = null;
             toyService=service;
@@ -288,7 +291,31 @@ namespace MVVMSample.ViewModels
             foreach (var toy in fullList)
                 Toys.Add(toy);
         }
+//כאשר האינטרנט הולך פייפן נרצה להודיע למשתמש וגם לא לאפשר להפעיל ממשקים מבוססי אינטרנט
+async Task NotifyWhenInternetIsLost(object sender, ConnectivityChangedEventArgs e)
+{
+    if (e.NetworkAccess != NetworkAccess.Internet)
+    {
+        await Shell.Current.DisplayAlert("No Internet", "Connection lost", "Ok");
+        hasInternet = false;
+    }
+    else
+    {
+		await Shell.Current.DisplayAlert(" Internet BACK!", "Connection Restored", "Ok");
+		hasInternet = true;
+    }
+    //check Wifi
+	IEnumerable<ConnectionProfile> profiles = Connectivity.Current.ConnectionProfiles;
 
+	if (profiles.Contains(ConnectionProfile.WiFi))
+	{
+		// Active Wi-Fi connection.
+		await Shell.Current.DisplayAlert("YEAH WIFI", "You have WIFI", "Ok");
+	}
+    else
+		await Shell.Current.DisplayAlert(" NO WIFI", "באסה", "Ok");
+
+}
         #endregion
 
 
