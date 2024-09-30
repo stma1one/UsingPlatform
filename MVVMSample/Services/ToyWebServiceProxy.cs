@@ -211,9 +211,31 @@ namespace MVVMSample.Services
 
        
 
-        public async Task<bool> UploadToyImage(FileResult photo, Toy toy)
+       public async Task<bool> UploadToyImage(FileResult photo, Toy toy)
+{
+	byte[] streamBytes;
+    //take the photo and make it a byte array
+    //copy to the byte array
+    try
+    {
+        using (var memoryStream = new MemoryStream())
         {
-            throw new NotImplementedException();
+            var stream = await photo.OpenReadAsync();
+            await stream.CopyToAsync(memoryStream);
+            streamBytes = memoryStream.ToArray();
         }
+        var fileContent = new ByteArrayContent(streamBytes);
+        fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
+		MultipartFormDataContent content = new MultipartFormDataContent();
+        //"photo" --זהה לשם הפרמטר של הפעולה בשרת שמייצגת את הקובץ
+        content.Add(fileContent, "photo", photo.FileName);
+        var response = await client.PutAsync(@$"{URL}Toys/Image/{toy.Id}", content);
+        if (response.IsSuccessStatusCode)
+        {
+            return true;
+        }
+    }
+    catch (Exception ex) { return false; }
+    return false;
     }
 }
