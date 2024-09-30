@@ -239,3 +239,4 @@ namespace MVVMSample.Services
     return false;
     }
 }
+}
